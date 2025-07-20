@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { useDispatch } from 'react-redux';
+import { addItem } from '../redux/CartSlice';
+
 function ProductList({ onHomeClick }) {
     const [showCart, setShowCart] = useState(false);
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
@@ -273,13 +276,28 @@ function ProductList({ onHomeClick }) {
                 </div>
             </div>
             {!showCart ? (
-                <div className="product-grid">
-
-
+            <div className="product-grid">
+                {plantsArray.map(category => (
+                <div key={category.category} className="category">
+                    <h2>{category.category}</h2>
+                    <div className="plants">
+                    {category.plants.map(plant => (
+                        <div key={plant.name} className="plant-card">
+                        <img src={plant.image} alt={plant.name} />
+                        <h3>{plant.name}</h3>
+                        <p>{plant.description}</p>
+                        <p>{plant.cost}</p>
+                        <button onClick={() => dispatch(addItem(plant))}>Add to Cart</button>
+                        </div>
+                    ))}
+                    </div>
                 </div>
+                ))}
+            </div>
             ) : (
-                <CartItem onContinueShopping={handleContinueShopping} />
+            <CartItem onContinueShopping={handleContinueShopping} />
             )}
+
         </div>
     );
 }
